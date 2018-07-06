@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MobileSite</string>
+    <string name="load_url">https://xn--80aabzckz2as4c.xn--p1ai/mobile_app/</string>
+    <string name="received_error_message">Не получается выполнить запрос</string>
+</resources>
