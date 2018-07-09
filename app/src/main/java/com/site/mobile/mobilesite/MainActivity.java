@@ -31,8 +31,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //Если происходит загрузка сайта, который нужен нам, то все нормально
                 if (Uri.parse(getString(R.string.load_url)).getHost().equals(Uri.parse(url).getHost())) return false;
 
+                //Иначе запрашиваем, чтобы система открыла эту ссылку в браузере
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 if (intent.resolveActivity(getPackageManager()) != null) startActivity(intent);
                 return true;
@@ -40,17 +42,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageStarted (WebView view, String url, Bitmap favicon) {
-                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE); //Делаем крутилку загрузки видимой
             }
 
             @Override
             public void onPageFinished (WebView view, String url) {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE); //Делаем крутилку загрузки невидимой
             }
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                //Toast.makeText(MainActivity.this, getText(R.string.received_error_message), Toast.LENGTH_SHORT).show();
+                //При возникновении ошибки, выводим сообщение
                 Toast.makeText(MainActivity.this, description, Toast.LENGTH_SHORT).show();
             }
         });
@@ -63,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Менять ссылку в папке res/values/strings.xml
+        //Для быстрого перехода можно нажать ctrl + ЛКМ
         webView.loadUrl(getString(R.string.load_url));
     }
 
