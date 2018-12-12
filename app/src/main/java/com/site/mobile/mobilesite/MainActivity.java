@@ -1,31 +1,44 @@
 package com.site.mobile.mobilesite;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private ProgressBar progressBar;
+    private TextView tvError;
+    private ImageButton ibRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tvError = findViewById(R.id.tvError);
+        ibRefresh = findViewById(R.id.tvRefresh);
+
         progressBar = findViewById(R.id.progressBar);
         webView = findViewById(R.id.webview);
+
+
+        initWebView();  //Инициализация webView
+        setListeners(); //Добавляем слушателя на нажатие кнопки
+        hideTextAndButton(); //Скрываем текст с ошибкой и кнопку
+    }
+
+    private void initWebView() {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
 
@@ -43,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageStarted (WebView view, String url, Bitmap favicon) {
                 progressBar.setVisibility(View.VISIBLE); //Делаем крутилку загрузки видимой
+                if (webView.getVisibility() == View.INVISIBLE) webView.setVisibility(View.VISIBLE);
+                hideTextAndButton();
             }
 
             @Override
@@ -54,8 +69,11 @@ public class MainActivity extends AppCompatActivity {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 //При возникновении ошибки, выводим сообщение
                 Toast.makeText(MainActivity.this, description, Toast.LENGTH_SHORT).show();
+                tvError.setText(description); // Сюда пиши ошибку
+                showTextAndButton();
             }
         });
+
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
@@ -68,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         //Менять ссылку в папке res/values/strings.xml
         //Для быстрого перехода можно нажать ctrl + ЛКМ
         webView.loadUrl(getString(R.string.load_url));
+
     }
 
     @Override
@@ -77,6 +96,27 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void showTextAndButton() {
+        tvError.setVisibility(View.VISIBLE);
+        ibRefresh.setVisibility(View.VISIBLE);
+
+        webView.setVisibility(View.INVISIBLE);
+    }
+
+    private void hideTextAndButton() {
+        tvError.setVisibility(View.GONE);
+        ibRefresh.setVisibility(View.GONE);
+    }
+
+    private void setListeners() {
+        ibRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                webView.reload();
+            }
+        });
     }
 }
 
