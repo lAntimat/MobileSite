@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView tvError;
     private ImageButton ibRefresh;
+    private String loadUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +29,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tvError = findViewById(R.id.tvError);
         ibRefresh = findViewById(R.id.tvRefresh);
-
         progressBar = findViewById(R.id.progressBar);
         webView = findViewById(R.id.webview);
 
+        loadUrl = getString(R.string.load_url);
+
+        //Если активити открывается после push уведомления, загружаем ссылку, которая пришла в уведомлении
+        String url = getIntent().getStringExtra("url");
+        if(url!=null) {
+            loadUrl = url;
+        }
 
         initWebView();  //Инициализация webView
         setListeners(); //Добавляем слушателя на нажатие кнопки
         hideTextAndButton(); //Скрываем текст с ошибкой и кнопку
+    }
+
+    //Если активити уже было открыто, вызывается этот метод
+    @Override
+    protected void onNewIntent(Intent intent) {
+        String url = intent.getStringExtra("url");
+        if(url!=null) {
+            loadUrl = url;
+        }
+        initWebView();
+        super.onNewIntent(intent);
     }
 
     private void initWebView() {
@@ -85,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Менять ссылку в папке res/values/strings.xml
         //Для быстрого перехода можно нажать ctrl + ЛКМ
-        webView.loadUrl(getString(R.string.load_url));
+        webView.loadUrl(loadUrl);
 
     }
 

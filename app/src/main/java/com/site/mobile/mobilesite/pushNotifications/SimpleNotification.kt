@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.site.mobile.mobilesite.MainActivity
 import com.site.mobile.mobilesite.R
 
 
@@ -63,8 +64,8 @@ class SimpleNotification(private val context: Context,
             "openUrl" -> {
                 val url = param["url"].asString ?: ""
                 if (url.isNotEmpty()) {
-                    resultIntent = Intent(Intent.ACTION_VIEW)
-                    resultIntent.data = Uri.parse(url)
+                    resultIntent = Intent(context, MainActivity::class.java)
+                    resultIntent.putExtra("url", url)
                 }
             }
         }
