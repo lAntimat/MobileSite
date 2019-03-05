@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setListeners(); //Добавляем слушателя на нажатие кнопки
         hideTextAndButton(); //Скрываем текст с ошибкой и кнопку
 
+        //Подписка на канал
         FirebaseMessaging.getInstance().subscribeToTopic("all");
     }
 
