@@ -15,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private ProgressBar progressBar;
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         initWebView();  //Инициализация webView
         setListeners(); //Добавляем слушателя на нажатие кнопки
         hideTextAndButton(); //Скрываем текст с ошибкой и кнопку
+
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
     }
 
     //Если активити уже было открыто, вызывается этот метод
